@@ -81,7 +81,40 @@ public class SmoothingFilter extends Frame implements ActionListener {
 				}
 			source.repaint();
 		}
-	}
+		else if( ((Button)e.getSource()).getLabel().equals("5x5Mean") ){
+            
+            		int[][] f = new int[height][width];
+            		for(int i =0; i< height;i++){
+                		for(int j=0; j<width;j++){
+                   			f[i][j] = source.image.getRGB(j, i);
+                		}
+           	       }
+            		int[][] output = new int[height][width];
+            		int[][] g = new int[height][width];
+            
+            
+            		for(int q=5; q <height-5;q++){
+               			 for(int p=5; p <width-5;p++){
+                   			int sum=0;
+                    			for(int v=-5; v<=5;v++)
+                        			for(int u=-5; u<=5;u++){
+                          				 sum += f[q+u][p+v];  
+                          
+                        		g[q][p] = sum/((2*5+1)*(2*5+1)); 
+                        			} 
+                		}
+  
+           		 }
+           
+
+            		for(int y=0, i=0 ; y<height ; y++)
+                		for(int x=0 ; x<width ; x++, i++){
+                			int newPixel = g[y][x];  
+                			source.image.setRGB(x,y,newPixel);
+                		}  
+            		source.repaint(); 
+       			 }
+		}
 	public static void main(String[] args) {
 		new SmoothingFilter(args.length==1 ? args[0] : "baboon.png");
 	}
