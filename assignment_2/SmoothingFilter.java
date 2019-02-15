@@ -164,7 +164,7 @@ public class SmoothingFilter extends Frame implements ActionListener {
 					else if (bSum < 0) bSum = 0;
 
 
-					target.image.setRGB(q,p,(new Color((int)rSum / (2*w+1), (int)gSum / (2*w+1) ,(int) bSum / (2*w+1)).getRGB()));
+					target.image.setRGB(q,p,(new Color((int)rSum, (int)gSum ,(int) bSum).getRGB()));
 				}
 			}
 				
@@ -193,7 +193,7 @@ public class SmoothingFilter extends Frame implements ActionListener {
 					if (bSum > 255) bSum = 255;
 					else if (bSum < 0) bSum = 0;
 
-					target.image.setRGB(q,p,(new Color((int)rSum / (2*w+1), (int)gSum / (2*w+1) , (int)bSum / (2*w+1)).getRGB()));
+					target.image.setRGB(q,p,(new Color((int)rSum, (int)gSum, (int)bSum).getRGB()));
 				}
 			}
 
@@ -207,7 +207,7 @@ public class SmoothingFilter extends Frame implements ActionListener {
 				for(int y = 0; y < height; y++){
 					
 					Color kernal[] = getKernal(source, x, y, kernalSize);
-					quickSort(kernal,0,(kernalSize*kernalSize)-1);
+					quickSort(kernal,0,kernal.length-1);
 					
 					target.image.setRGB(x,y,kernal[(kernal.length/2)+1].getRGB());
 				}
@@ -264,23 +264,25 @@ public class SmoothingFilter extends Frame implements ActionListener {
 	}
 
 	private void quickSort(Color[] array, int start, int end) {
-		int partition = partition(array, start, end);
 
-		if(partition-1>start){
-			quickSort(array, start, partition -1);
-		}
+		if(start<end){
+			int partition = partition(array, start, end);
 
-		if(partition+1<end){
-			quickSort(array, partition + 1, end);
+			if(partition-1>start){
+				quickSort(array, start, partition -1);
+			}
+
+			if(partition+1<end){
+				quickSort(array, partition + 1, end);
+			}
 		}
 	}
 
 	private int partition(Color [] array, int start, int end) {
 		int intPivot = array[end].getRed() + array[end].getGreen() + array[end].getBlue();
 		Color pivot = array[end];
-
-		for(int i=0; i<end; i++){
-			if((array[i].getRed() + array[i].getGreen() + array[i].getBlue()) < intPivot) {
+		for(int i=0; i<=end; i++){
+			if((array[i].getRed() + array[i].getGreen() + array[i].getBlue()) <= intPivot) {
 				Color temp = array[start];
 				array[start] = array[i];
 				array[i] = temp;
