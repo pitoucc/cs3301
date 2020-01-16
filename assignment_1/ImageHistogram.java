@@ -115,7 +115,65 @@ public class ImageHistogram extends Frame implements ActionListener {
 			
 		}
 
-		else if ( ((Button)e.getSource()).getLabel().equals("Histogram Equalization") ) {
+		else if ( ((Button)e.getSource()).getLabel().equals("Histogram Equalization") )
+		{
+			float[] hslValues = null ;
+                
+               		float Ered = 0,Egreen=0,Eblue=0;
+               		for(int y=0, i=0 ; y<height ; y++)
+                	{
+                    	     for(int x=0 ; x<width ; x++, i++)
+                            {
+                      		Color clr = new Color(input.getRGB(x, y));
+                        	float red = clr.getRed();
+                        	float green = clr.getGreen();
+                        	float blue = clr.getBlue();
+                        	Ered = red;
+                       		Egreen = green;
+                        	Eblue = blue;
+                    	    }    
+                	}
+                	float max = Math.max(Math.max(Ered, Egreen),Eblue);
+                	float min = Math.min(Math.min(Ered, Egreen),Eblue);
+                	float delta = max - min;
+                	float hue = 0.f;
+                	if(delta==0)
+                	{
+                   		hue = 0;
+                	}
+               		else if(max == Ered)
+                	{
+                    		hue = (float) (Egreen - Eblue)/delta;
+                    		if(hue <0) 
+                   		{
+                        	    hue += 6.f;
+                    		}
+                	}
+                	else if (max == Egreen)
+               		{
+                    		hue = (float) (Eblue - Ered)/(delta + 2.f);
+                	}
+                	else if(max == Eblue)
+               		{
+                    		hue = (float) (Ered - Egreen)/(delta + 4.f);
+                	}
+                	hue = 60.f * hue;
+                
+                	float lightness = (max + min) * 0.5f;
+                	float saturation;
+                
+                	if(delta==0)
+               		{
+                   		 saturation = 0.f;
+                	}
+               		else
+                	{
+                    		saturation = delta/(1-Math.abs(2.f * 1 - 1.f));
+                	}
+                
+                	hslValues[0] = hue;
+               		hslValues[1] = saturation;
+                	hslValues[2] = lightness;
 
 		}
 	}
